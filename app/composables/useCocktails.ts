@@ -75,9 +75,11 @@ export function useCocktails() {
     return wrap<Cocktail>(cocktails.value[0]!);
   }
 
-  // Echter API-Aufruf — $fetch ist Nuxts eingebautes fetch
+  // API-Aufruf — $fetch ist Nuxts eingebautes fetch
   // Das Generic <CocktailApiResponse> sagt TypeScript, was die API zurückgibt
-  async function ladeCocktails(suchbegriff: string = "margarita"): Promise<void> {
+  async function ladeCocktails(
+    suchbegriff: string = "margarita",
+  ): Promise<void> {
     loading.value = true;
     error.value = null;
 
