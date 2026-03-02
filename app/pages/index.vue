@@ -1,37 +1,36 @@
 <script setup lang="ts">
-// useUserListe gibt uns reaktive Daten und typisierte Funktionen
-const { users, loading, ladeDemoUser, findById } = useUserListe();
+const { cocktails, loading, error, ladeCocktails, filterByAlcohol } =
+  useCocktails();
 
-// Typ-Inferenz: TypeScript erkennt User | undefined aus findById()
-const gefunden = computed(() => findById(2));
-
-// Demo-Daten beim Laden der Seite abrufen
-await ladeDemoUser();
+// Sucht nach Cocktails mit "rum"
+await ladeCocktails("rum");
 </script>
 
 <template>
   <main class="m-8">
-    <h1 class="mb-6 text-4xl font-bold">TypeScript Demo</h1>
+    <h1 class="mb-2 text-4xl font-bold">TypeScript Demo – CocktailDB</h1>
+    <p class="mb-6 text-gray-500">Daten von thecocktaildb.com</p>
 
     <p v-if="loading">Laden…</p>
+    <p v-else-if="error" class="text-red-600">{{ error }}</p>
 
     <section v-else>
-      <h2 class="mb-4 text-2xl font-semibold">Alle Benutzer</h2>
+      <!-- filterByAlcohol() demonstriert Type Alias als Parameter -->
+      <h2 class="mb-4 text-2xl font-semibold">
+        Alkoholische Cocktails ({{ filterByAlcohol("Alcoholic").length }})
+      </h2>
 
-      <!-- BenutzerKarte erwartet: id (number), name (string), email? (string) -->
-      <!-- TypeScript prüft beim Build, ob die Props korrekt übergeben werden -->
-      <BenutzerKarte
-        v-for="user in users"
-        :key="user.id"
-        :id="user.id"
-        :name="user.name"
-        :email="user.email"
+      <CocktailKarte
+        v-for="cocktail in cocktails"
+        :key="cocktail.id"
+        :name="cocktail.name"
+        :category="cocktail.category"
+        :glass="cocktail.glass"
+        :thumbnail="cocktail.thumbnail"
+        :alcoholic="cocktail.alcoholic"
       />
 
-      <h2 class="mb-2 mt-8 text-2xl font-semibold">findById(2)</h2>
-      <!-- gefunden ist User | undefined — mit v-if absichern -->
-      <p v-if="gefunden">{{ gefunden.name }} ({{ gefunden.email ?? "keine E-Mail" }})</p>
-      <p v-else>Nicht gefunden</p>
+
     </section>
   </main>
 </template>

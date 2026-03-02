@@ -3,8 +3,8 @@
 Dieses Tutorial erklärt die wichtigsten TypeScript-Konzepte anhand eines praktischen Beispiels.
 Die Demo-Dateien befinden sich in:
 
-- `app/composables/useUserListe.ts` – Generics, Inferenz, Typen
-- `app/components/BenutzerKarte.vue` – Komponente mit TypeScript Props
+- `app/composables/useCocktails.ts` – Generics, Inferenz, Typen (echte Daten von thecocktaildb.com)
+- `app/components/CocktailKarte.vue` – Komponente mit TypeScript Props
 
 ---
 
@@ -170,8 +170,8 @@ const s = ref<string>(""); // explizit: Ref<string>
 
 Die folgenden Dateien zeigen alle Konzepte im Zusammenspiel:
 
-### `app/composables/useUserListe.ts`
-Ein Composable, das eine typisierte Liste verwaltet — demonstriert Interfaces, Type Aliases, Generics und Inferenz.
+### `app/composables/useCocktails.ts`
+Ein Composable, das echte API-Daten von thecocktaildb.com lädt — demonstriert Interfaces (inkl. API-Response-Typen), Type Aliases, Generics, Typ-Inferenz und `$fetch<T>()`.
 
-### `app/components/BenutzerKarte.vue`
-Eine Komponente, die einen `User` als Prop erhält und anzeigt — demonstriert `defineProps<T>()` mit TypeScript.
+### `app/components/CocktailKarte.vue`
+Eine Komponente, die einen Cocktail als Prop erhält und anzeigt — demonstriert `defineProps<T>()` mit TypeScript.
