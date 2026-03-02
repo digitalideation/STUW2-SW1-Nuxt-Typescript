@@ -10,6 +10,11 @@
 
 <myButton></myButton>
 
+<!-- Tailwind CSS v4 test -->
+<div class="mt-8 rounded-xl bg-blue-500 p-6 text-center text-white font-bold text-xl shadow-lg">
+  Tailwind CSS v4 is working!
+</div>
+
 </template>
 
 <style>
