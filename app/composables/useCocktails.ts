@@ -32,12 +32,6 @@ interface CocktailRaw {
   strDrinkThumb: string;
 }
 
-// Generic Hilfsfunktion — T ist ein Platzhalter für jeden Typ
-// Demonstriert: wrap<string>("hallo") → ["hallo"]
-function wrap<T>(val: T): T[] {
-  return [val];
-}
-
 // ============================================================
 // Composable
 // ============================================================
@@ -69,12 +63,6 @@ export function useCocktails() {
     return cocktails.value.filter((c) => c.alcoholic === status);
   }
 
-  // Generic in Aktion: wrap<Cocktail> gibt einen Cocktail als Array zurück
-  function wrapFirst(): Cocktail[] {
-    if (cocktails.value.length === 0) return [];
-    return wrap<Cocktail>(cocktails.value[0]!);
-  }
-
   // API-Aufruf — $fetch ist Nuxts eingebautes fetch
   // Das Generic <CocktailApiResponse> sagt TypeScript, was die API zurückgibt
   async function ladeCocktails(
@@ -103,7 +91,6 @@ export function useCocktails() {
     error,
     findById,
     filterByAlcohol,
-    wrapFirst,
     ladeCocktails,
   };
 }
