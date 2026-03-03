@@ -15,7 +15,8 @@ In diesem Tutorial lernen wir, was Pinia ist, warum man es braucht und wie man e
 6. [Store in einer Seite verwenden](#6-store-in-einer-seite-verwenden)
 7. [Getters im Detail](#7-getters-im-detail)
 8. [Actions im Detail](#8-actions-im-detail)
-9. [Wann Composable, wann Pinia?](#9-wann-composable-wann-pinia)
+9. [Shared State in Aktion](#9-shared-state-in-aktion)
+10. [Wann Composable, wann Pinia?](#10-wann-composable-wann-pinia)
 
 ---
 
@@ -23,7 +24,7 @@ In diesem Tutorial lernen wir, was Pinia ist, warum man es braucht und wie man e
 
 ### Das Problem
 
-In unserer `index.vue` verwenden wir das Composable `useCocktails()`:
+In unserer `typescript.vue` verwenden wir das Composable `useCocktails()`:
 
 ```ts
 const { cocktails, loading, error, ladeCocktails } = useCocktails();
@@ -472,7 +473,63 @@ actions: {
 
 ---
 
-## 9. Wann Composable, wann Pinia?
+## 9. Shared State in Aktion
+
+Der grösste Vorteil von Pinia gegenüber Composables: **der State wird zwischen Seiten geteilt**.
+
+### Das Experiment
+
+1. Öffne `/pinia` und suche nach z.B. "gin"
+2. Klicke auf **"Zur Shared-State Demo"** → du landest auf `/pinia-shared`
+3. Der Suchbegriff "gin" und alle Ergebnisse sind **noch da**!
+4. Ändere den Suchbegriff auf `/pinia-shared` zu "vodka" und suche
+5. Gehe zurück zu `/pinia` → "vodka" und die neuen Ergebnisse sind sichtbar
+
+### Warum funktioniert das?
+
+Beide Seiten rufen `useCocktailStore()` auf — und bekommen **dieselbe Instanz**:
+
+```
+     useCocktailStore()          useCocktailStore()
+           │                           │
+           └──────────┬────────────────┘
+                      │
+              ┌───────▼────────┐
+              │  Pinia Store   │
+              │                │
+              │  suchbegriff   │  ← gleicher Wert auf beiden Seiten!
+              │  cocktails     │
+              │  loading       │
+              └────────────────┘
+```
+
+### Der Code: Zweite Seite (`app/pages/pinia-shared.vue`)
+
+```vue
+<script setup lang="ts">
+const store = useCocktailStore();
+
+// Daten nur laden, falls der User direkt auf diese Seite kommt
+if (!store.hatDaten && !store.loading) {
+  await store.ladeCocktails();
+}
+</script>
+
+<template>
+  <!-- Gleicher Store, gleiche Daten! -->
+  <p>Aktueller Suchbegriff: {{ store.suchbegriff }}</p>
+  <p>{{ store.anzahl }} Ergebnisse geladen</p>
+
+  <input v-model="store.suchbegriff" />
+  <button @click="store.ladeCocktails(store.suchbegriff)">Suchen</button>
+</template>
+```
+
+**Zum Vergleich:** Würde man `useCocktails()` (Composable) auf zwei Seiten verwenden, hätte jede Seite ihre **eigene Kopie** — der Suchbegriff würde beim Seitenwechsel verloren gehen.
+
+---
+
+## 10. Wann Composable, wann Pinia?
 
 | Situation                                                  | Empfehlung  |
 | ---------------------------------------------------------- | ----------- |
@@ -495,9 +552,10 @@ Beide Ansätze schliessen sich nicht aus — du kannst beides in einem Projekt v
 ## Ausprobieren
 
 1. Starte die App: `npm run dev`
-2. Öffne `http://localhost:3000` → Composable-Version
-3. Klicke auf den Link "Zur Pinia-Store-Version" oder gehe direkt zu `http://localhost:3000/pinia`
+2. Öffne `http://localhost:3000` → Übersichtsseite mit Themenauswahl
+3. Wähle "Pinia Store" oder gehe direkt zu `http://localhost:3000/pinia`
 4. Vergleiche den Code:
-   - Composable: `app/composables/useCocktails.ts` + `app/pages/index.vue`
+   - Composable: `app/composables/useCocktails.ts` + `app/pages/typescript.vue`
    - Pinia Store: `app/stores/cocktails.ts` + `app/pages/pinia.vue`
-5. Öffne die Vue DevTools (F12 → Vue → Pinia) und beobachte den Store-State live
+5. **Shared State testen:** Suche auf `/pinia` nach etwas, dann klicke auf "Zur Shared-State Demo" → der Suchbegriff und die Ergebnisse sind auf `/pinia-shared` noch vorhanden!
+6. Öffne die Vue DevTools (F12 → Vue → Pinia) und beobachte den Store-State live

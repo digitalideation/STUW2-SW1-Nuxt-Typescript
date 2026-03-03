@@ -23,7 +23,7 @@ app/
   components/        → Vue-Komponenten (z.B. CocktailKarte.vue, CocktailKartePinia.vue)
   composables/       → Composables mit TypeScript (z.B. useCocktails.ts)
   stores/            → Pinia Stores (z.B. cocktails.ts)
-  pages/             → Seiten (index.vue, pinia.vue)
+  pages/             → Seiten (index.vue, typescript.vue, pinia.vue, pinia-shared.vue)
 playground/          → TypeScript-Beispieldateien zum Experimentieren
 ```
 

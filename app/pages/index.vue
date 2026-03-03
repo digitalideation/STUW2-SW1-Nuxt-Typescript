@@ -1,50 +1,46 @@
-<script setup lang="ts">
-const { cocktails, loading, error, ladeCocktails } = useCocktails();
-
-const suchbegriff = ref("margarita");
-
-await ladeCocktails(suchbegriff.value);
-</script>
-
 <template>
-  <main class="m-8">
-    <h1 class="mb-2 text-4xl font-bold">TypeScript Demo – CocktailDB</h1>
-    <p class="mb-6 text-gray-500">Daten von thecocktaildb.com</p>
+  <main class="m-8 max-w-2xl">
+    <h1 class="mb-2 text-4xl font-bold">STUW2 – SW1</h1>
+    <p class="mb-8 text-gray-500">Wähle ein Thema aus:</p>
 
-    <form class="mb-6 flex gap-2" @submit.prevent="ladeCocktails(suchbegriff)">
-      <input
-        v-model="suchbegriff"
-        type="text"
-        placeholder="Cocktail suchen…"
-        class="rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
-      />
-      <button
-        type="submit"
-        class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+    <div class="grid gap-4">
+      <!-- TypeScript + Composable -->
+      <NuxtLink
+        to="/typescript"
+        class="group rounded-xl border border-gray-200 p-6 transition hover:border-blue-400 hover:shadow-md"
       >
-        Suchen
-      </button>
-    </form>
+        <h2 class="mb-1 text-xl font-semibold text-gray-800 group-hover:text-blue-600">
+          TypeScript &amp; Composables
+        </h2>
+        <p class="text-sm text-gray-500">
+          Cocktail-Suche mit Composable (<code>useCocktails</code>), Interfaces, Typen und API-Calls.
+        </p>
+      </NuxtLink>
 
-    <p v-if="loading">Laden...</p>
-    <p v-else-if="error">{{ error }}</p>
+      <!-- Pinia Store -->
+      <NuxtLink
+        to="/pinia"
+        class="group rounded-xl border border-gray-200 p-6 transition hover:border-purple-400 hover:shadow-md"
+      >
+        <h2 class="mb-1 text-xl font-semibold text-gray-800 group-hover:text-purple-600">
+          Pinia Store
+        </h2>
+        <p class="text-sm text-gray-500">
+          Gleiche App mit Pinia — State, Getters, Actions und globaler State-Management.
+        </p>
+      </NuxtLink>
 
-    <section v-else>
-      <CocktailKarte
-        v-for="cocktail in cocktails"
-        :key="cocktail.id"
-        :name="cocktail.name"
-        :category="cocktail.category"
-        :glass="cocktail.glass"
-        :thumbnail="cocktail.thumbnail"
-        :alcoholic="cocktail.alcoholic"
-      />
-    </section>
-
-    <!-- Link zur Pinia-Version -->
-    <div class="mt-8">
-      <NuxtLink to="/pinia" class="text-blue-600 underline hover:text-blue-800">
-        → Zur Pinia-Store-Version dieser App
+      <!-- Pinia Shared State -->
+      <NuxtLink
+        to="/pinia-shared"
+        class="group rounded-xl border border-gray-200 p-6 transition hover:border-green-400 hover:shadow-md"
+      >
+        <h2 class="mb-1 text-xl font-semibold text-gray-800 group-hover:text-green-600">
+          Pinia Shared State
+        </h2>
+        <p class="text-sm text-gray-500">
+          Zeigt, wie Pinia den State zwischen Seiten teilt — Suchbegriff bleibt beim Navigieren erhalten.
+        </p>
       </NuxtLink>
     </div>
   </main>
