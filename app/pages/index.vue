@@ -40,5 +40,12 @@ await ladeCocktails(suchbegriff.value);
         :alcoholic="cocktail.alcoholic"
       />
     </section>
+
+    <!-- Link zur Pinia-Version -->
+    <div class="mt-8">
+      <NuxtLink to="/pinia" class="text-blue-600 underline hover:text-blue-800">
+        → Zur Pinia-Store-Version dieser App
+      </NuxtLink>
+    </div>
   </main>
 </template>
