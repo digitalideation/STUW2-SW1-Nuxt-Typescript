@@ -13,26 +13,6 @@ Die Demo-Dateien befinden sich in:
 In Nuxt 4 ist `<script setup lang="ts">` der empfohlene Weg, um Komponenten zu schreiben.
 TypeScript ist direkt eingebaut. Normalerweise ist kein Extra-Setup nötig.
 
-```vue
-<script setup lang="ts">
-interface Props {
-  title: string;
-  count?: number; // ? = optional
-}
-
-const props = defineProps<Props>();
-</script>
-```
-
-Falls doch, Typescript so installieren:
-
-```
-npm install -D typescript vue-tsc
-
-```
-
-und .js → .ts Dateien umbenennen
-
 ---
 
 ## 2. Primitive Typen
