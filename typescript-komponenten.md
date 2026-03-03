@@ -1,6 +1,6 @@
-# TypeScript in Nuxt – Tutorial
+# TypeScript in Nuxt – Übersicht
 
-Dieses Tutorial erklärt die wichtigsten TypeScript-Konzepte anhand eines praktischen Beispiels.
+Diese Übersicht erklärt die wichtigsten TypeScript-Konzepte anhand eines praktischen Beispiels.
 Die Demo-Dateien befinden sich in:
 
 - `app/composables/useCocktails.ts` – Generics, Inferenz, Typen (Daten von thecocktaildb.com)
