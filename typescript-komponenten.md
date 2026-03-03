@@ -3,7 +3,7 @@
 Dieses Tutorial erklärt die wichtigsten TypeScript-Konzepte anhand eines praktischen Beispiels.
 Die Demo-Dateien befinden sich in:
 
-- `app/composables/useCocktails.ts` – Generics, Inferenz, Typen (echte Daten von thecocktaildb.com)
+- `app/composables/useCocktails.ts` – Generics, Inferenz, Typen (Daten von thecocktaildb.com)
 - `app/components/CocktailKarte.vue` – Komponente mit TypeScript Props
 
 ---
@@ -11,20 +11,27 @@ Die Demo-Dateien befinden sich in:
 ## 1. Komponenten mit `<script setup lang="ts">`
 
 In Nuxt 4 ist `<script setup lang="ts">` der empfohlene Weg, um Komponenten zu schreiben.
-TypeScript ist direkt eingebaut — kein Extra-Setup nötig.
+TypeScript ist direkt eingebaut. Normalerweise ist kein Extra-Setup nötig.
 
 ```vue
 <script setup lang="ts">
-
 interface Props {
   title: string;
   count?: number; // ? = optional
 }
 
 const props = defineProps<Props>();
-
 </script>
 ```
+
+Falls doch, Typescript so installieren:
+
+```
+npm install -D typescript vue-tsc
+
+```
+
+und .js → .ts Dateien umbenennen
 
 ---
 
@@ -77,7 +84,9 @@ type ID = string | number; // Kombination von Typen
 ### interface — erweiterbar und wiederöffenbar
 
 ```ts
-interface User { name: string }
+interface User {
+  name: string;
+}
 
 // Erweiterung mit extends:
 interface AdminUser extends User {
@@ -103,9 +112,9 @@ let userStatus: Status = "active"; // ✅
 // Nullable:
 type MaybeUser = User | null;
 
-let currentUser: MaybeUser = null;       // noch nicht geladen
-currentUser = { id: 1, name: "Anna" };   // ✅ User zuweisen
-currentUser = null;                      // ✅ zurücksetzen erlaubt
+let currentUser: MaybeUser = null; // noch nicht geladen
+currentUser = { id: 1, name: "Anna" }; // ✅ User zuweisen
+currentUser = null; // ✅ zurücksetzen erlaubt
 
 // Tuple — Array mit fixer Länge und Typen:
 type Pair = [string, number]; // z.B. ["Anna", 25]
@@ -124,16 +133,16 @@ TypeScript erkennt Typen automatisch aus dem zugewiesenen Wert — man muss nich
 
 ```ts
 // TS erkennt den Typ selbst:
-const count = 0;       // wird als number erkannt
-const label = "hi";    // wird als string erkannt
-const list = [1, 2];   // wird als number[] erkannt
+const count = 0; // wird als number erkannt
+const label = "hi"; // wird als string erkannt
+const list = [1, 2]; // wird als number[] erkannt
 
 // Fehler, weil count als number inferiert wurde:
 // count = "hallo"; // ❌ Type 'string' is not assignable to type 'number'
 
 // Ref<T> in Vue/Nuxt — Inferenz funktioniert auch hier:
-const n = ref(0);      // TypeScript erkennt: Ref<number>
-const s = ref("");     // TypeScript erkennt: Ref<string>
+const n = ref(0); // TypeScript erkennt: Ref<number>
+const s = ref(""); // TypeScript erkennt: Ref<string>
 ```
 
 ---
@@ -155,10 +164,10 @@ function wrap<T>(val: T): T[] {
 }
 
 wrap<string>("hallo"); // gibt ["hallo"] zurück — Typ: string[]
-wrap<number>(42);      // gibt [42] zurück    — Typ: number[]
+wrap<number>(42); // gibt [42] zurück    — Typ: number[]
 
 // Ref<T> aus Vue ist selbst ein Generic:
-const n = ref<number>(0);  // explizit: Ref<number>
+const n = ref<number>(0); // explizit: Ref<number>
 const s = ref<string>(""); // explizit: Ref<string>
 ```
 
@@ -166,12 +175,185 @@ const s = ref<string>(""); // explizit: Ref<string>
 
 ---
 
-## 7. Praxisbeispiel
+## 7. Funktionssignaturen verstehen
 
-Die folgenden Dateien zeigen alle Konzepte im Zusammenspiel:
+Eine TypeScript-Funktion hat drei beschriftbare Stellen:
 
-### `app/composables/useCocktails.ts`
-Ein Composable, das echte API-Daten von thecocktaildb.com lädt — demonstriert Interfaces (inkl. API-Response-Typen), Type Aliases, Generics, Typ-Inferenz und `$fetch<T>()`.
+```ts
+function mapCocktail  (raw: CocktailRaw)  : Cocktail {
+//       ↑             ↑                   ↑
+//    Name          Parameter            Rückgabetyp
+//                  + sein Typ
+```
 
-### `app/components/CocktailKarte.vue`
-Eine Komponente, die einen Cocktail als Prop erhält und anzeigt — demonstriert `defineProps<T>()` mit TypeScript.
+Der Rückgabetyp nach `)` sagt TypeScript: _"Diese Funktion muss ein Objekt zurückgeben, das dem `Cocktail`-Interface entspricht."_ Fehlt ein Feld oder hat es den falschen Typ, erscheint sofort ein Fehler — noch bevor der Code läuft.
+
+In plain JavaScript würde man einfach schreiben:
+
+```js
+function mapCocktail(raw) { // keine Typen, keine Absicherung
+```
+
+---
+
+## 8. API-Typen: Warum zwei Interfaces?
+
+Beim Arbeiten mit externen APIs braucht man oft **zwei separate Interfaces** — eines für die rohen API-Daten und eines für das eigene App-Modell.
+
+### Warum kann TypeScript die Typen nicht selbst erkennen (inferieren)?
+
+TypeScript läuft nur zur **Compile-Zeit**. Ein HTTP-Request passiert zur **Laufzeit** — TypeScript kann nicht in eine live API schauen. Man muss ihr selbst sagen, welche Daten zurückkommen.
+
+### Das rohe API-Modell
+
+```ts
+interface CocktailRaw {
+  idDrink: string;
+  strDrink: string;
+  strAlcoholic: string;
+  strCategory: string;
+  strGlass: string;
+  strDrinkThumb: string;
+}
+```
+
+Spiegelt **exakt** wider, was die API zurückschickt — inklusive der unschönen Feldnamen wie `idDrink` oder `strDrink`.
+
+### Das interne App-Modell
+
+```ts
+interface Cocktail {
+  id: string;
+  name: string;
+  alcoholic: AlcoholStatus;
+  category: string;
+  glass: string;
+  thumbnail: string;
+}
+```
+
+Das ist die **saubere Struktur**, mit der man in der eigenen App arbeitet.
+
+### Der Ablauf
+
+```
+API gibt CocktailRaw zurück  →  Mapping  →  Cocktail wird in der App verwendet
+```
+
+Diese Trennung ist gute Praxis: Ändert die API ihre Feldnamen, passt man nur `CocktailRaw` und die Mapping-Funktion an — nicht die gesamte App.
+
+---
+
+## 9. Union Types & Type Casting
+
+### Union Type als Werteliste
+
+```ts
+type AlcoholStatus = "Alcoholic" | "Non Alcoholic" | "Optional Alcohol";
+```
+
+`alcoholic` darf **nur** einer dieser drei Strings sein. Schreibt man `alcoholic: "Bier"`, meldet TypeScript sofort einen Fehler. Viel sicherer als einfach `string`.
+
+### Type Casting mit `as`
+
+```ts
+alcoholic: raw.strAlcoholic as AlcoholStatus,
+```
+
+Die API liefert `strAlcoholic` als normalen `string`. Mit `as AlcoholStatus` sagt man TypeScript: _"Vertrau mir, dieser Wert wird immer einer der drei gültigen Werte sein."_ Das ist ein bewusstes Versprechen an den Compiler — man vertraut der API.
+
+---
+
+## 10. Die Mapping-Funktion
+
+```ts
+function mapCocktail(raw: CocktailRaw): Cocktail {
+  return {
+    id: raw.idDrink,
+    name: raw.strDrink,
+    alcoholic: raw.strAlcoholic as AlcoholStatus,
+    category: raw.strCategory,
+    glass: raw.strGlass,
+    thumbnail: raw.strDrinkThumb,
+  };
+}
+```
+
+Eine reine Transformationsfunktion: `CocktailRaw` rein, `Cocktail` raus. Nur Feldnamen umbenennen — sonst nichts.
+
+---
+
+## 11. `$fetch<T>()` und Generics in der Praxis
+
+```ts
+const data = await $fetch<CocktailApiResponse>(
+  `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${suchbegriff}`,
+);
+```
+
+`$fetch` ist Nuxts eingebauter Fetch-Helper. Vereinfacht sieht seine Definition so aus:
+
+```ts
+function $fetch<T>(url: string): Promise<T>;
+```
+
+`T` ist ein Platzhalter — er wird beim Aufruf durch den echten Typ ersetzt:
+
+```ts
+$fetch<string>(url); // data ist string
+$fetch<number>(url); // data ist number
+$fetch<CocktailApiResponse>(url); // data ist CocktailApiResponse
+```
+
+Ohne das Generic wäre `data` als `unknown` getypt — TypeScript könnte bei `data.drinks` nicht helfen.
+
+### Die API-Response typen
+
+```ts
+interface CocktailApiResponse {
+  drinks: CocktailRaw[] | null;
+}
+```
+
+Die API verpackt alles in ein `drinks`-Array — und gibt `null` zurück, wenn keine Ergebnisse gefunden werden (kein leeres Array!). Das `| null` behandelt genau diesen Fall.
+
+---
+
+## 12. Nullish Coalescing: `??` vs. `||` vs. `|`
+
+```ts
+cocktails.value = (data.drinks ?? []).map(mapCocktail);
+```
+
+### Was bedeutet `??`?
+
+Der **Nullish Coalescing Operator** `??` gibt die rechte Seite zurück, wenn die linke `null` oder `undefined` ist.
+
+### Unterschied zu `||`
+
+```ts
+data.drinks ?? []; // Fallback nur bei null oder undefined
+data.drinks || []; // Fallback bei JEDEM falsy-Wert (null, undefined, 0, "", false)
+```
+
+Im Cocktail-Beispiel funktionieren beide — `drinks` ist entweder ein Array oder `null`. Aber `??` ist **präziser**, weil es nur genau das behandelt, was man meint.
+
+Wo der Unterschied wirklich wichtig wird:
+
+```ts
+const count = userData.loginCount ?? 0;
+// loginCount = 0 → bleibt 0  ✅
+
+const count = userData.loginCount || 0;
+// loginCount = 0 → wird zu 0 ersetzt... aus dem falschen Grund  ⚠️
+```
+
+Mit `||` würde eine legitime `0` ersetzt, weil `0` falsy ist. `??` behält sie korrekt.
+
+### Und `|`?
+
+```ts
+data.drinks | []; // ❌ bitweises OR — vergleicht Binärzahlen, hier sinnlos
+```
+
+Das `|` (einzeln) ist ein **bitweiser Operator** aus der Mathematik — komplett anderer Kontext. Nicht zu verwechseln mit `||` oder dem `|` in Union Types (`string | number`).
