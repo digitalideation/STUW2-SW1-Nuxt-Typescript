@@ -1,9 +1,7 @@
 <script setup lang="ts">
-const { cocktails, loading, error, ladeCocktails, filterByAlcohol } =
-  useCocktails();
+const { cocktails, loading, error, ladeCocktails } = useCocktails();
 
-// Sucht nach Cocktails mit "rum"
-await ladeCocktails("rum");
+await ladeCocktails();
 </script>
 
 <template>
@@ -11,15 +9,10 @@ await ladeCocktails("rum");
     <h1 class="mb-2 text-4xl font-bold">TypeScript Demo – CocktailDB</h1>
     <p class="mb-6 text-gray-500">Daten von thecocktaildb.com</p>
 
-    <p v-if="loading">Laden…</p>
-    <p v-else-if="error" class="text-red-600">{{ error }}</p>
+    <p v-if="loading">Laden...</p>
+    <p v-else-if="error">{{ error }}</p>
 
     <section v-else>
-      <!-- filterByAlcohol() demonstriert Type Alias als Parameter -->
-      <h2 class="mb-4 text-2xl font-semibold">
-        Alkoholische Cocktails ({{ filterByAlcohol("Alcoholic").length }})
-      </h2>
-
       <CocktailKarte
         v-for="cocktail in cocktails"
         :key="cocktail.id"
@@ -29,8 +22,6 @@ await ladeCocktails("rum");
         :thumbnail="cocktail.thumbnail"
         :alcoholic="cocktail.alcoholic"
       />
-
-
     </section>
   </main>
 </template>

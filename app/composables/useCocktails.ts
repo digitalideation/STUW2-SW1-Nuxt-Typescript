@@ -1,26 +1,16 @@
-// ============================================================
-// useCocktails.ts
-// Demonstriert: Interface, Type Alias, Generics, Typ-Inferenz
-// Daten von: https://www.thecocktaildb.com
-// ============================================================
-
-// Interface: beschreibt die Struktur unseres Cocktail-Objekts
 interface Cocktail {
   id: string;
   name: string;
-  alcoholic: AlcoholStatus; // → siehe Type Alias unten
+  alcoholic: AlcoholStatus;
   category: string;
   glass: string;
   thumbnail: string;
 }
 
-// Type Alias: nur diese drei Werte sind für "alcoholic" erlaubt
-type AlcoholStatus = "Alcoholic" | "Non alcoholic" | "Optional alcohol";
+type AlcoholStatus = "Alcoholic" | "Non Alcoholic" | "Optional Alcohol";
 
-// Interface: beschreibt die rohe API-Antwort von thecocktaildb.com
-// Wir tippen die API-Antwort, damit TypeScript uns beim Zugriff hilft
 interface CocktailApiResponse {
-  drinks: CocktailRaw[] | null; // null wenn nichts gefunden wurde
+  drinks: CocktailRaw[] | null;
 }
 
 interface CocktailRaw {
@@ -32,11 +22,7 @@ interface CocktailRaw {
   strDrinkThumb: string;
 }
 
-// ============================================================
-// Composable
-// ============================================================
 export function useCocktails() {
-  // Typ-Inferenz: TypeScript erkennt Ref<Cocktail[]> automatisch
   const cocktails = ref<Cocktail[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
@@ -53,18 +39,6 @@ export function useCocktails() {
     };
   }
 
-  // Gibt Cocktail | undefined zurück — weil find() nichts finden könnte
-  function findById(id: string): Cocktail | undefined {
-    return cocktails.value.find((c) => c.id === id);
-  }
-
-  // Type Alias als Parameter — nur erlaubte Status-Werte können übergeben werden
-  function filterByAlcohol(status: AlcoholStatus): Cocktail[] {
-    return cocktails.value.filter((c) => c.alcoholic === status);
-  }
-
-  // API-Aufruf — $fetch ist Nuxts eingebautes fetch
-  // Das Generic <CocktailApiResponse> sagt TypeScript, was die API zurückgibt
   async function ladeCocktails(
     suchbegriff: string = "margarita",
   ): Promise<void> {
@@ -76,8 +50,9 @@ export function useCocktails() {
         `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${suchbegriff}`,
       );
 
-      // data.drinks ist CocktailRaw[] | null — mit ?? absichern
       cocktails.value = (data.drinks ?? []).map(mapCocktail);
+
+      console.log(cocktails.value);
     } catch {
       error.value = "API-Fehler: Cocktails konnten nicht geladen werden.";
     } finally {
@@ -89,8 +64,6 @@ export function useCocktails() {
     cocktails,
     loading,
     error,
-    findById,
-    filterByAlcohol,
     ladeCocktails,
   };
 }
