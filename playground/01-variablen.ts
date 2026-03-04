@@ -4,7 +4,7 @@
 // Ausführen: npx tsx playground/01-variablen.ts
 
 // --- Explizite Typen ---
-let vorname: string = "Anna";
+let vorname: string = "string";
 let alter: number = 25;
 let aktiv: boolean = true;
 let tags: string[] = ["ts", "nuxt", "vue"];
