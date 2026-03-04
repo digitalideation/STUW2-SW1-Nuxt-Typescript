@@ -1,4 +1,4 @@
-# STUW2-SW1 — TypeScript & Nuxt
+# STUW2-SW2 — TypeScript & Nuxt
 
 Dieses Projekt ist eine Lernumgebung für **TypeScript in Nuxt 4**.
 Es enthält eine Demo-App (Cocktail-Suche) und begleitende Dokumentation.
