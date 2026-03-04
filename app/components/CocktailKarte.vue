@@ -16,11 +16,19 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <div class="flex items-center gap-4 rounded-lg border border-gray-200 p-3 mb-3">
-    <img :src="props.thumbnail" :alt="props.name" class="h-16 w-16 rounded-md object-cover" />
+  <div
+    class="flex items-center gap-4 rounded-lg border border-gray-200 p-3 mb-3"
+  >
+    <img
+      :src="props.thumbnail"
+      :alt="props.name"
+      class="h-16 w-16 rounded-md object-cover"
+    />
     <div>
       <h3 class="font-bold">{{ props.name }}</h3>
-      <p class="text-sm text-gray-500">{{ props.category }} · {{ props.glass }}</p>
+      <p class="text-sm text-gray-500">
+        {{ props.category }} · {{ props.glass }}
+      </p>
       <span
         :class="[
           'mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-semibold',

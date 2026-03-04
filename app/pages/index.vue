@@ -9,11 +9,14 @@
         to="/typescript"
         class="group rounded-xl border border-gray-200 p-6 transition hover:border-blue-400 hover:shadow-md"
       >
-        <h2 class="mb-1 text-xl font-semibold text-gray-800 group-hover:text-blue-600">
+        <h2
+          class="mb-1 text-xl font-semibold text-gray-800 group-hover:text-blue-600"
+        >
           TypeScript &amp; Composables
         </h2>
         <p class="text-sm text-gray-500">
-          Cocktail-Suche mit Composable (<code>useCocktails</code>), Interfaces, Typen und API-Calls.
+          Cocktail-Suche mit Composable (<code>useCocktails</code>), Interfaces,
+          Typen und API-Calls.
         </p>
       </NuxtLink>
 
@@ -22,11 +25,14 @@
         to="/pinia"
         class="group rounded-xl border border-gray-200 p-6 transition hover:border-purple-400 hover:shadow-md"
       >
-        <h2 class="mb-1 text-xl font-semibold text-gray-800 group-hover:text-purple-600">
+        <h2
+          class="mb-1 text-xl font-semibold text-gray-800 group-hover:text-purple-600"
+        >
           Pinia Store
         </h2>
         <p class="text-sm text-gray-500">
-          Gleiche App mit Pinia — State, Getters, Actions und globaler State-Management.
+          Gleiche App mit Pinia — State, Getters, Actions und globaler
+          State-Management.
         </p>
       </NuxtLink>
 
@@ -35,11 +41,14 @@
         to="/pinia-shared"
         class="group rounded-xl border border-gray-200 p-6 transition hover:border-green-400 hover:shadow-md"
       >
-        <h2 class="mb-1 text-xl font-semibold text-gray-800 group-hover:text-green-600">
+        <h2
+          class="mb-1 text-xl font-semibold text-gray-800 group-hover:text-green-600"
+        >
           Pinia Shared State
         </h2>
         <p class="text-sm text-gray-500">
-          Zeigt, wie Pinia den State zwischen Seiten teilt — Suchbegriff bleibt beim Navigieren erhalten.
+          Zeigt, wie Pinia den State zwischen Seiten teilt — Suchbegriff bleibt
+          beim Navigieren erhalten.
         </p>
       </NuxtLink>
     </div>

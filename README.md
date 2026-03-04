@@ -24,7 +24,6 @@ app/
   composables/       → Composables mit TypeScript (z.B. useCocktails.ts)
   stores/            → Pinia Stores (z.B. cocktails.ts)
   pages/             → Seiten (index.vue, typescript.vue, pinia.vue, pinia-shared.vue)
-playground/          → TypeScript-Beispieldateien zum Experimentieren
 ```
 
 ---
@@ -35,18 +34,5 @@ playground/          → TypeScript-Beispieldateien zum Experimentieren
 | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`typescript-setup.md`](typescript-setup.md)             | Nuxt & TypeScript einrichten (neues/bestehendes Projekt, `nuxt.config.ts`)                                                                    |
 | [`typescript-komponenten.md`](typescript-komponenten.md) | TypeScript-Konzepte erklärt: Primitive Typen, Interfaces, Generics, Inferenz, Union Types, Nullish Coalescing — alles anhand der Cocktail-App |
-| [`typescript-playground.md`](typescript-playground.md)   | Anleitung zum Ausführen der Playground-Beispiele                                                                                              |
 | [`pinia-store.md`](pinia-store.md)                       | Pinia State Management: Installation, State, Getters, Actions — am Cocktail-Beispiel                                                          |
 | [`tailwind-v4-install.md`](tailwind-v4-install.md)       | Tailwind CSS v4 in Nuxt 4 installieren                                                                                                        |
-
----
-
-## Playground
-
-Im Ordner `playground/` liegen einfache `.ts`-Dateien zum Ausprobieren von TypeScript-Grundlagen — unabhängig von der Nuxt-App.
-
-```bash
-npx tsx playground/01-variablen.ts
-```
-
-Mehr dazu in [`typescript-playground.md`](typescript-playground.md).
